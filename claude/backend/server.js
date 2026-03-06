@@ -1,13 +1,10 @@
 // ─── server.js ───────────────────────────────────────────────────────────────
 // Entry point: loads env, connects MongoDB, starts Express server
 
-
-const cors = require("cors");
-app.use(cors());
-
 require('dotenv').config();
 const express   = require('express');
 const mongoose  = require('mongoose');
+const cors      = require('cors');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -16,9 +13,11 @@ const userRoutes = require('./routes/userRoutes');
 // Import error handler middleware
 const errorHandler = require('./middleware/errorHandler');
 
+// ✅ Initialize app FIRST before calling app.use()
 const app = express();
 
 // ── Middleware ────────────────────────────────────────────────────────────────
+app.use(cors());         // allow cross-origin requests (Postman, frontend etc.)
 app.use(express.json()); // parse incoming JSON body
 
 // ── Routes ────────────────────────────────────────────────────────────────────
@@ -34,7 +33,7 @@ app.get('/', (req, res) => {
 app.use(errorHandler);
 
 // ── Connect MongoDB then start server ────────────────────────────────────────
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 mongoose
   .connect(process.env.MONGO_URI)
